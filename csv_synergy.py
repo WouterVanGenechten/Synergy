@@ -57,7 +57,7 @@ def Checkerboardwriter(Doxycycline_conc_max = 400, Dox_number = 6, Fluconazole_c
             i +=1
 
             
-def Synergyplotter(importfile = "import.csv"): #plotter uses your original importfile
+def Synergyplotter(importfile = "import.csv", xlabel = "Fluconazole (µg/mL)", ylabel = "Doxycycline (µg/mL)"): #plotter uses your original importfile
     import seaborn as sns
     import matplotlib.pyplot as plt
     import pandas as pd
@@ -68,16 +68,11 @@ def Synergyplotter(importfile = "import.csv"): #plotter uses your original impor
     df = a.astype(float)
 
 
-    # figsize=(6, 6) control width and height
-    # dpi = 600, I 
     plt.figure(figsize=(12, 6), 
                dpi = 600) 
     
     x_axis_labels = ["0","0,25",'0,5',"1","2",'4','8','16','32','64']
-    y_axis_labels = rows=['400','200','100','50','25','0']
-
-
-    
-    p1 = sns.heatmap(df, yticklabels = y_axis_labels, xticklabels = x_axis_labels, cmap="Blues", annot=True, annot_kws={"size": 7})
-    p1.set_xlabel("Drug1 (µg/mL)")
-    p1.set_ylabel("Drug2(µg/mL)")
+    y_axis_labels = rows=['400','200','100','50','25','0']    
+    p1 = sns.heatmap(df, yticklabels = y_axis_labels, xticklabels = x_axis_labels, cmap="Blues", annot=True, annot_kws={"size": 10})
+    p1.set_xlabel("Fluconazole (µg/mL)")
+    p1.set_ylabel("Doxycycline (µg/mL)")
