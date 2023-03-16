@@ -6,9 +6,27 @@ Created on Mon Mar  6 16:43:35 2023
 @author: u0107886 : Wouter Van Genechten
 """
 
+def Calculatesynergy():
+    from synergy.combination import MuSyC # or BRAID, Zimmer
+    import pandas as pd
+    from csv_synergy import Checkerboardwriter
+    from csv_synergy import Synergyplotter
+    import webbrowser
+
+    Checkerboardwriter(Doxycycline_conc_max = 400, Dox_number = 6,\ #drug 1 max conc and amount of dilutions
+                   Fluconazole_conc_max = 64, Fluc_number = 10,\ #drug 2 max conc and amount of dilutions
+                   importfile = "import.csv",\   #This should be a 6row, 10 column csv file with 1 being full growth and 0 being no growth
+                   exportfile = "export.csv" )   #this will become a file which can be read by the synergycalculator
+    
+    model = MuSyC(E0_bounds=(0,1), E1_bounds=(0,1), E2_bounds=(0,1), E3_bounds=(0,1))
+    model.fit(df['drug1.conc'], df['drug2.conc'], df['effect'], bootstrap_iterations=100)
+    print(model.summary())
+        
+    df = pd.read_csv("export.csv")
+
 def Checkerboardwriter(Doxycycline_conc_max = 400, Dox_number = 6, Fluconazole_conc_max = 64,\
-                   Fluc_number = 10, importfile = "Hap43plate3import.csv",\
-                       exportfile = 'Hap43plate3_ready.csv'):
+                   Fluc_number = 10, importfile = "import.csv",\
+                       exportfile = 'export.csv'):
     import csv
     doxycycline_concentrations = []
     fluconazole_concentrations = []
@@ -42,7 +60,7 @@ def Checkerboardwriter(Doxycycline_conc_max = 400, Dox_number = 6, Fluconazole_c
             i +=1
 
             
-def Synergyplotter(importfile = "Hap43plate3import.csv"):
+def Synergyplotter(importfile = "import.csv"): #plotter uses your original importfile
     import seaborn as sns
     import matplotlib.pyplot as plt
     import pandas as pd
@@ -64,5 +82,5 @@ def Synergyplotter(importfile = "Hap43plate3import.csv"):
 
     
     p1 = sns.heatmap(df, yticklabels = y_axis_labels, xticklabels = x_axis_labels, cmap="Blues", annot=True, annot_kws={"size": 7})
-    p1.set_xlabel("Fluconazole (µg/mL)")
-    p1.set_ylabel("Doxycycline(µg/mL)")
+    p1.set_xlabel("Drug1 (µg/mL)")
+    p1.set_ylabel("Drug2(µg/mL)")
